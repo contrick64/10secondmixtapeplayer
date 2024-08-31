@@ -1,0 +1,74 @@
+{
+  "RockDrums": {
+    "program": 10,
+    "type": "drums",
+    "notes": [36, 38, 42, 46, 49, 37, 45, 43, 41]
+  },
+  "SynthDrums": {
+    "program": 10,
+    "type": "drums",
+    "notes": [36, 35, 40, 42, 39, 70, 45, 27]
+  },
+  "Percussion": {
+    "program": 10,
+    "type": "drums",
+    "notes": [67, 68, 75, 56, 74, 83, 54, 81, 58]
+  },
+  "Beatbox": {
+    "program": 118,
+    "type": "drums",
+    "notes": [39, 67, 38, 42, 37]
+  },
+  "RockBass": {
+    "program": 34,
+    "type": "bass"
+  },
+  "UprightBass": {
+    "program": 32,
+    "type": "bass"
+  },
+  "AcousticGuitar": {
+    "program": 25,
+    "type": "lead"
+  },
+  "Harpsichord": {
+    "program": 6,
+    "type": "lead"
+  },
+  "Marimba": {
+    "program": 13,
+    "type": "lead"
+  },
+  "LeadGuitar": {
+    "program": 30,
+    "type": "lead"
+  },
+  "Keyboard": {
+    "program": 0,
+    "type": "lead"
+  },
+  "Trumpet": {
+    "program": 56,
+    "type": "lead"
+  },
+  "Sax": {
+    "program": 65,
+    "type": "lead"
+  },
+  "MaleSinger": {
+    "program": 53,
+    "type": "lead"
+  },
+  "FemaleSinger": {
+    "program": 54,
+    "type": "lead"
+  },
+  "Cat": {
+    "program": 0,
+    "type": "lead"
+  },
+  "Dog": {
+    "program": 0,
+    "type": "lead"
+  }
+}
