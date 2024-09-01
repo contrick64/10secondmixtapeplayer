@@ -39,11 +39,11 @@
     "program": 13,
     "type": "lead"
   },
-  "LeadGuitar": {
+  "RockGuitar": {
     "program": 30,
     "type": "lead"
   },
-  "Keyboard": {
+  "Piano": {
     "program": 0,
     "type": "lead"
   },
