@@ -6,7 +6,7 @@ api_url = "https://p.jasperstephenson.com/ld51/api"
 def load_song_by_id(song_id):
     url = f"{api_url}/songs/byIdFragment/{song_id}"
     response = requests.get(url)
-    
+
     if not response.ok:
         raise Exception(f"Failed to load song with ID {song_id}")
     if response.text == 'null':
@@ -17,7 +17,7 @@ def load_song_by_id(song_id):
 def load_page_of_songs(page=10):
     url = f"{api_url}/songs/top/{page}"
     response = requests.get(url)
-    
+
     if not response.ok:
         raise Exception(f"Failed to load page {page}")
     page = json.loads(response.text)
