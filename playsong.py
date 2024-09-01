@@ -4,7 +4,7 @@ from utils import load_json
 
 def make_event_list(instrument, part):
     instrument_type = instrument["type"]
-    note_map = [61, 63, 65, 66, 68, 70, 72, 73, 75, 77]
+    note_map = [61, 63, 65, 66, 68, 70, 72, 73, 75, 77, 78, 80, 82, 84, 85]
     if instrument_type == "drums":
         note_map = instrument["notes"]
         logging.debug(f"Processing drums part with note map {note_map}")
