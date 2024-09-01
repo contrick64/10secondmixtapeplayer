@@ -24,8 +24,8 @@ def make_event_list(instrument, part):
         }
     for key, ul in note_list.items() for note in ul
     ]
-    part_event_list = [{"message":'note_on',"time":int(1+note['start']*1000),**note} for note in note_list]
-    part_event_list.extend({"message":'note_off',"time":int(1+note['end']*1000),**note} for note in note_list)
+    part_event_list = [{"message":'note_on',"time":int(note['start']*1000),**note} for note in note_list]
+    part_event_list.extend({"message":'note_off',"time":int(note['end']*1000),**note} for note in note_list)
     return part_event_list
 
 def make_midi_from_events(file, track_event_list, track_index, prev_time=0):
