@@ -68,7 +68,9 @@ def process_part(part, instruments):
         part_event_list.sort(key=lambda x: x['time'])
         return part_event_list
 
-def play_song(song):
+def convert_song_to_midi(song):
+    if song.get('id',''):
+        logging.info(f"Converting song {song['id']} to MIDI")
     instruments = load_json('instruments.json')
     file = mido.MidiFile(type=1)
     file.ticks_per_beat = 800
@@ -96,7 +98,12 @@ def play_song(song):
         make_midi_from_events(file, event_list, i)
 
     logging.debug(f"Tracks: {file.tracks}")
-    
+
+    return file
+
+def play_midi_file(file):
+    port = mido.open_output('Microsoft GS Wavetable Synth 0')
+
     try:
         while True:
             for msg in file.play():
@@ -104,5 +111,3 @@ def play_song(song):
     except KeyboardInterrupt:
         port.reset()
         port.close()
-
-    return file
