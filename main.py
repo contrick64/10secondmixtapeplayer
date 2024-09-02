@@ -35,6 +35,7 @@ def cli(args):
         song = load_json(args.song_file)
         midi_file = convert_song_to_midi(song)
         play_midi_file(midi_file)
+
     elif args.command == 'play':
         if args.songid:
             song = load_song_by_id(args.songid)
