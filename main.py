@@ -1,6 +1,8 @@
 from argparse import ArgumentParser
+import json
 import logging
 
+from convertmidi import convert_midifile_to_song
 from utils import load_json
 from config import configure_logging
 from playsong import convert_song_to_midi, play_midi_file
@@ -19,6 +21,12 @@ def parse_args():
 
     play = subs.add_parser('play', help='Play songs from the 10 Second Mixtape API')
     play.add_argument('--songid', help='ID of the song to play', default=None, required=False)
+
+    convert = subs.add_parser('convert', help='Convert a MIDI file to a JSON song file')
+    convert.add_argument('midi_file', help='Path to the MIDI file to convert')
+    convert.add_argument('output_file', help='Path to save the JSON file')
+    convert.add_argument('--song_name', help='Name of the song', default='Untitled')
+    convert.add_argument('--musician_name', help='Name of the musician', default='contrick.net')
 
     return parser.parse_args()
 
@@ -42,6 +50,11 @@ def cli(args):
         song = load_song_by_id(args.song_id)
         midi_file = convert_song_to_midi(song)
         midi_file.save(args.output_file)
+
+    elif args.command == 'convert':
+        song = convert_midifile_to_song(args.midi_file, args.song_name, args.musician_name)
+        with open(args.output_file, 'w') as f:
+            f.write(json.dumps(song, indent=4))
 
 if __name__ == '__main__':
     configure_logging()
