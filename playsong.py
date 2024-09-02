@@ -1,16 +1,13 @@
 import mido
 import logging
 from utils import load_json
+from instruments import Instrument
 
-def make_event_list(instrument, part):
-    instrument_type = instrument["type"]
-    note_map = [61, 63, 65, 66, 68, 70, 72, 73, 75, 77, 78, 80, 82, 84, 85]
-    if instrument_type == "drums":
-        note_map = instrument["notes"]
-        logging.debug(f"Processing drums part with note map {note_map}")
-    if instrument_type == "bass":
-        note_map = [int(note)-24 for note in note_map]
-        logging.debug(f"Processing bass part with note map {note_map}")
+def make_event_list(part):
+    instrument = Instrument(part['instrument'])
+    note_map = instrument.notes
+    instrument_type = instrument.type
+
     notes = part['notes']
     note_list = {note_map[i]:sound for i,sound in enumerate([note for note in notes]) if sound}
     # make note list one flat list
@@ -19,7 +16,6 @@ def make_event_list(instrument, part):
             'note': key,
             "instrument_type":instrument_type,
             "instrument":part['instrument'],
-            "program":instrument['program'],
             **note
         }
     for key, ul in note_list.items() for note in ul
@@ -59,42 +55,43 @@ def make_midi_from_events(file, track_event_list, track_index, prev_time=0):
 #         track.append(mido.Message(event['message'], note=event['note'], velocity=64, time=time, channel=channel))
 #         prev_time = int(event['time'])
 
-def process_part(part, instruments):
+def process_part(part):
     instrument_name = part['instrument']
     logging.debug(f"Processing part for instrument {instrument_name}")
-    if instrument_name in instruments.keys():
-        instrument=instruments[instrument_name]
-        part_event_list = make_event_list(instrument, part)
-        part_event_list.sort(key=lambda x: x['time'])
-        return part_event_list
+    part_event_list = make_event_list(part)
+    part_event_list.sort(key=lambda x: x['time'])
+    return part_event_list
+
+def make_track(file, part, i):
+    inst_name = part['instrument']
+    logging.debug(f"Making midi track {i}: {inst_name}")
+    track = mido.MidiTrack()
+    file.tracks.append(track)
+    instrument = Instrument(inst_name)
+    track_name = inst_name
+    if any(track.name == track_name for track in file.tracks):
+        track_name += " 2"
+        logging.debug(f"Track name {inst_name} already exists, renaming to {track_name}")
+    track.append(mido.MetaMessage('track_name', name=track_name, time=0))
+    logging.debug(f"Adding track {track_name} at index {i}")
+    channel = 9 if instrument.type == 'drums' else i
+    track.append(mido.Message('program_change', program=instrument.program, channel=channel))
+    track = mido.MidiTrack()
+    file.tracks.append(track)
 
 def convert_song_to_midi(song):
     if song.get('id',''):
         logging.info(f"Converting song {song['id']} to MIDI")
-    instruments = load_json('instruments.json')
+
     file = mido.MidiFile(type=1)
     file.ticks_per_beat = 800
+
     tracks = [part["instrument"] for part in song['parts']]
     logging.debug(f"Tracks: {tracks}")
-    for i, part in enumerate(song['parts']):
-        inst_name = part['instrument']
-        logging.debug(f"Making midi track {i}: {inst_name}")
-        track = mido.MidiTrack()
-        file.tracks.append(track)
-        instrument = instruments[inst_name]
-        track_name = inst_name
-        if any(track.name == track_name for track in file.tracks):
-            track_name += " 2"
-            logging.debug(f"Track name {inst_name} already exists, renaming to {track_name}")
-        track.append(mido.MetaMessage('track_name', name=track_name, time=0))
-        logging.debug(f"Adding track {track_name} at index {i}")
-        channel = 9 if instrument['type'] == 'drums' else i
-        track.append(mido.Message('program_change', program=instrument['program'], channel=channel))
-        track = mido.MidiTrack()
-        file.tracks.append(track)
-        instrument = instruments[part['instrument']]
 
-        event_list = process_part(part, instruments)
+    for i, part in enumerate(song['parts']):
+        make_track(file, part, i)
+        event_list = process_part(part)
         make_midi_from_events(file, event_list, i)
 
     logging.debug(f"Tracks: {file.tracks}")
