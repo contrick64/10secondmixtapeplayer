@@ -13,9 +13,9 @@ def parse_args():
     playfile = subs.add_parser('playfile', help='Play or song from a JSON file')
     playfile.add_argument('song_file', help='Path to the JSON file containing the song')
 
-    convert = subs.add_parser('convert', help='Convert a JSON song file to a MIDI file')
-    convert.add_argument('song_file', help='Path to the JSON file containing the song')
-    convert.add_argument('output_file', help='Path to save the MIDI file')
+    download = subs.add_parser('download', help='Convert a JSON song file to a MIDI file')
+    download.add_argument('song_id', help='Path to the JSON file containing the song')
+    download.add_argument('output_file', help='Path to save the MIDI file')
 
     play = subs.add_parser('play', help='Play songs from the 10 Second Mixtape API')
     play.add_argument('--songid', help='ID of the song to play', default=None, required=False)
@@ -37,8 +37,9 @@ def cli(args):
             for song in load_page_of_songs():
                 midi_file = convert_song_to_midi(song)
                 play_midi_file(midi_file)
-    elif args.command == 'convert':
-        song = load_json(args.song_file)
+
+    elif args.command == 'download':
+        song = load_song_by_id(args.song_id)
         midi_file = convert_song_to_midi(song)
         midi_file.save(args.output_file)
 
