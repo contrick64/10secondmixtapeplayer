@@ -1,5 +1,7 @@
 # 10 Second Mixtape
 
+16 beats, 10 seconds. 96bpm. by default in [signal](https://signal.vercel.app), this is 7680 ticks, or 480 ticks per beat.
+
 The game has 17 instruments (l for [lead](#lead-instruments), b for [bass](#bass-instruments), d for [drums](#drums)):
 
 | Type    | Instrument           |
